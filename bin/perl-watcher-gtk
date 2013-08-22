@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+use 5.12.0;
+use strict;
+use warnings;
+
+use Carp;
+use Devel::Comments;
+use Hash::Merge qw( merge );
+use FindBin;
+
+BEGIN { unshift @INC, "$FindBin::Bin/../lib" }
+
+use App::PerlWatcher::Util::Bootstrap qw/get_home_file config engine_config/;
+use aliased 'App::PerlWatcher::Engine';
+use aliased 'App::PerlWatcher::UI::Gtk2::Application';
+use aliased 'App::PerlWatcher::UI::Gtk2::Gtk2Backend';
+
+my $engine_config = engine_config;
+my $gtk2_config = config(
+    get_home_file(
+        'gtk2.conf',
+        'App-PerlWatcher-UI-Gtk2',
+        'examples/Gtk2.conf.example',
+    )
+);
+
+my $backend = Gtk2Backend->new;
+my $engine = Engine->new(config => $engine_config, backend => $backend);
+my $app = Application->new(config => $gtk2_config, engine => $engine);
+
+$engine->frontend( $app );
+
+$app->show;
+
+$SIG{INT} = $SIG{TERM} = sub {
+    ### exiting
+    $app->quit;
+};
+
+$engine->start;
+
+1;

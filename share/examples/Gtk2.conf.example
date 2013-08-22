@@ -1,0 +1,12 @@
+use utf8;
+
+{
+    hide_on_startup     => 0,
+    hide_from_taskbar   => 0,
+    window_size         => [ 500, 300 ],
+
+    # make the event uninteresting after
+    # seen at the UI during 5 seconds
+    uninteresting_after => 3,
+
+};

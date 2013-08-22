@@ -1,0 +1,12 @@
+0.05      2013-08-20 13:25:30 Europe/Minsk
+    New configuration options: hide_on_startup, hide_from_taskbar
+0.05      2013-08-18 17:19:38 Europe/Minsk
+    Just reflect changes in Engine
+
+0.04      2013-07-28 01:17:35 Europe/Minsk
+    Added summary level selector
+    Added nice graphical icons done by Hanna Mineeva
+
+0.03      2013-07-25 12:32:36 Europe/Minsk
+    Update PerlWatcher-Engine to using persistent shelf
+
