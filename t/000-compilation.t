@@ -12,6 +12,7 @@ use_ok 'App::PerlWatcher::UI::Gtk2::StatusesModel';
 use_ok 'App::PerlWatcher::UI::Gtk2::StatusesTreeView';
 use_ok 'App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher';
 use_ok 'App::PerlWatcher::UI::Gtk2::Utils';
+use_ok 'App::PerlWatcher::UI::Gtk2::URLOpener';
 
-done_testing();
+done_testing;
 

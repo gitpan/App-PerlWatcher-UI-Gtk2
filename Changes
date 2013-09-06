@@ -1,5 +1,9 @@
-0.05      2013-08-20 13:25:30 Europe/Minsk
-    New configuration options: hide_on_startup, hide_from_taskbar
+0.06      2013-09-06 23:54:18 Europe/Minsk
+    New configuration options: hide_on_startup, hide_from_taskbar, open_url_delay
+    Openable links are now opened with delay to improve usability
+    The main events window is now more user-friendly, i.e. scrollable
+    Minor fixes in the build system (dependencies, minimal perl version)
+
 0.05      2013-08-18 17:19:38 Europe/Minsk
     Just reflect changes in Engine
 

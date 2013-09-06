@@ -9,4 +9,10 @@ use utf8;
     # seen at the UI during 5 seconds
     uninteresting_after => 3,
 
+    # deley between cliked on link and actually
+    # invoke command to open it. If user 
+    # clicks on the other link the timer will be
+    # reset.
+    open_url_delay => 2,
+
 };

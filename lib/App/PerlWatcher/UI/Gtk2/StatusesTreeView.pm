@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::StatusesTreeView;
 {
-  $App::PerlWatcher::UI::Gtk2::StatusesTreeView::VERSION = '0.05';
+  $App::PerlWatcher::UI::Gtk2::StatusesTreeView::VERSION = '0.06';
 }
 
 use 5.12.0;
@@ -11,22 +11,31 @@ use aliased 'App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf'
 use aliased 'App::PerlWatcher::Level' => 'Level', qw/:levels/;
 use App::PerlWatcher::Openable;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon/;
+use App::PerlWatcher::UI::Gtk2::URLOpener;
 use Devel::Comments;
 use Gtk2;
+use List::Util qw/first/;
 use POSIX qw(strftime);
 
 use base 'Gtk2::TreeView';
 
 sub new {
     my $class = shift;
-    my ($tree_store, $app) = @_; 
+    my ($tree_store, $app) = @_;
     # create an entry
     my $self = Gtk2::TreeView->new($tree_store);
-    $self -> {_tree_store   } = $tree_store;
-    $self -> {_app          } = $app;
+    my $open_delay = $app->config->{open_url_delay} // 1;
+    my $url_opener = App::PerlWatcher::UI::Gtk2::URLOpener->new(
+        delay    => $open_delay,
+        callback => sub { $self->_unmark_opening(shift); },
+    );
+    $self->{_tree_store   } = $tree_store;
+    $self->{_app          } = $app;
+    $self->{_url_opener   } = $url_opener;
+
     bless $self, $class;
     $self->_construct;
-    return $self;    
+    return $self;
 }
 
 sub _is_unseen {
@@ -36,7 +45,31 @@ sub _is_unseen {
     #my $r = $status->timestamp > $last_seen;
     my $r = $self->{_tree_store}->shelf->status_changed($status);
     return $r;
-}                        
+}
+
+
+sub _unmark_opening {
+    my ($self, $openables) = @_;
+
+};
+
+sub _open_url {
+    my ($self, $openable) = @_;
+    $self->{_url_opener}->delayed_open($openable);
+}
+
+sub _get_status_icon {
+    my ($self, $status) = @_;
+    return get_level_icon($status->level, $self->_is_unseen($status));
+}
+
+sub _get_openable_icon {
+    my ($self, $openable) = @_;
+    my $is_opening = first { $_ == $openable }
+        @{ $self->{_url_opener}->openables };
+    my $icon_name = $is_opening ? 'opening-link' : 'open-link';
+    return get_icon($icon_name);
+}
 
 sub _construct {
     my $self = shift;
@@ -54,13 +87,13 @@ sub _constuct_actions_column {
     $column->pack_start( $renderer, 0 );
     $self->append_column($column);
     $column->set_cell_data_func(
-        $renderer, 
+        $renderer,
         sub {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
             my $value = $model->get_value( $iter, 0 );
-            my $pixbuff = 
+            my $pixbuff =
                 $value->does('App::PerlWatcher::Openable')
-                ? get_icon("open-link")
+                ? $self->_get_openable_icon($value)
                 :  undef;
             $cell->set(pixbuf => $pixbuff)
         }
@@ -70,20 +103,16 @@ sub _constuct_actions_column {
             ### got activation signal
             my ( $cell, $path ) = @_;
             my $iter = $model->get_iter_from_string($path);
-            $model->get_value( $iter, 0 )->open_url;
+            my $openable = $model->get_value( $iter, 0 );
+            $self->_open_url($openable);
     });
-}
-
-sub _get_status_icon {
-    my ($self, $status) = @_;
-    return get_level_icon($status->level, $self->_is_unseen($status));
 }
 
 sub _constuct_icon_column {
     my $self = shift;
     my $renderer_icon = Gtk2::CellRendererPixbuf->new;
     $renderer_icon->set('stock-id' => 1);
-    
+
     my $column_icon = Gtk2::TreeViewColumn->new;
     $column_icon->pack_start( $renderer_icon, 0 );
     $self->append_column($column_icon);
@@ -126,8 +155,8 @@ sub _constuct_description_column {
             }
             else {
                 $cell->set( text => $value -> content );
-            }                                 
-            
+            }
+
         }
     );
 }
@@ -149,7 +178,7 @@ sub _constuct_activation_column {
         },
         $tree_store
     );
-    
+
     my $column_toggle = Gtk2::TreeViewColumn->new;
     $column_toggle->pack_start( $renderer_toggle, 1 );
     $column_toggle->set_title('_active');
@@ -185,7 +214,7 @@ sub _constuct_timestamp_column {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
             my $value = $model->get_value( $iter, 0 );
             my $timestamp = $value->timestamp;
-            my $text = $timestamp ? strftime('%H:%M:%S',localtime $timestamp) 
+            my $text = $timestamp ? strftime('%H:%M:%S',localtime $timestamp)
                                   : q{}
                                   ;
             ## $text

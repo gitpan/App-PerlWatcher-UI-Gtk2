@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 {
-  $App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher::VERSION = '0.05';
+  $App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher::VERSION = '0.06';
 }
 
 use 5.12.0;

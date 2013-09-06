@@ -1,5 +1,4 @@
 .travis.yml
-App-PerlWatcher-UI-Gtk2-0.05/.travis.yml
 Changes
 LICENSE
 MANIFEST
@@ -15,6 +14,7 @@ lib/App/PerlWatcher/UI/Gtk2/Gtk2Backend.pm
 lib/App/PerlWatcher/UI/Gtk2/StatusesModel.pm
 lib/App/PerlWatcher/UI/Gtk2/StatusesTreeView.pm
 lib/App/PerlWatcher/UI/Gtk2/SummaryLevelSwitcher.pm
+lib/App/PerlWatcher/UI/Gtk2/URLOpener.pm
 lib/App/PerlWatcher/UI/Gtk2/Utils.pm
 lib/App/PerlWatcher/UI/Gtk2/Widgets/CellRendererActivatablePixbuf.pm
 share/assets/icons/alert.png
@@ -26,9 +26,11 @@ share/assets/icons/info_new.png
 share/assets/icons/notice.png
 share/assets/icons/notice_new.png
 share/assets/icons/open-link.png
+share/assets/icons/opening-link.png
 share/assets/icons/unknown.png
 share/assets/icons/unknown_new.png
 share/assets/icons/warn.png
 share/assets/icons/warn_new.png
 share/examples/Gtk2.conf.example
 t/000-compilation.t
+t/010-url-opener.t

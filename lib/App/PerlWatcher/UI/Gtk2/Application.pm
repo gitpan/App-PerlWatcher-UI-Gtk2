@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.05';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.06';
 }
 
 use 5.12.0;
@@ -42,6 +42,11 @@ The timestamp last seen of user-visible watcher statuses.
 =cut
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
 
+=head1 CREDITS
+
+Hanna Mineeva
+
+=cut
 
 sub _build_statuses_tree {
     my $self = shift;
@@ -114,7 +119,8 @@ sub _build_window {
     my $default_size =
       $self->config->{window_size} // [ 500, 300 ];
 
-    $window->set_default_size(@$default_size);
+    #$window->set_default_size(@$default_size);
+    $window->set_size_request(@$default_size);
     $window->set_title($self->title);
 
     #$window -> set_decorated(0);
@@ -150,7 +156,7 @@ sub BUILD {
     my $self = shift;
     Gtk2->init;
 
-    $self->_consruct_gui;
+    $self->_construct_gui;
 
     $self->_set_label("just started", LEVEL_ANY, 0);
     $self->window->show_all
@@ -199,7 +205,7 @@ sub _set_label {
     $self->icon_widget->set(pixbuf => $icon);
 }
 
-sub _consruct_gui {
+sub _construct_gui {
     my $self = shift;
 
     my $vbox = Gtk2::VBox->new( 0, 3 );
@@ -220,7 +226,12 @@ sub _consruct_gui {
             $self->_mark_as_read;
     });
     $hbox->pack_end( $reset_button, 1, 1, 0 );
-    $vbox->pack_start($self->statuses_tree, 1, 1, 0 );
+
+    my $scrolled_window = Gtk2::ScrolledWindow->new;
+    $scrolled_window->set_policy("automatic", "automatic");
+    $scrolled_window->add($self->statuses_tree);
+
+    $vbox->pack_start($scrolled_window, 1, 1, 0 );
     $vbox->show_all;
 }
 
