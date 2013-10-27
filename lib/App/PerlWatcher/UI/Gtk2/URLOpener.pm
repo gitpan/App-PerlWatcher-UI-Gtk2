@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::URLOpener;
 {
-  $App::PerlWatcher::UI::Gtk2::URLOpener::VERSION = '0.06';
+  $App::PerlWatcher::UI::Gtk2::URLOpener::VERSION = '0.07_1';
 }
 # ABSTRACT: The class is responsible for opening urls after a shord idle.
 

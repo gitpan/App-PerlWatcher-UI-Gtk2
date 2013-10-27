@@ -1,20 +1,20 @@
 CORE:
 # update status (tray icon) to notify changes, filtered by some level?
+# blicking dot whan any watcher is been polled
 # about information?
 
 BUILD/ECOSYSTEM:
 # Document modules with Pod::Weaver
+# Look at xacobeo sources
 
 GUI:
-# add application icon
-# add more correct "opening" icon
 # remember collapse/expand state
 # make "desktop-friendly": install application with icon into user's system menu
 # appear window on hot key press as in stardict
-# don't show 'mark all as read" when there is nothing to mark
+# don't show 'mark all as read' when there is nothing to mark
 # collapse watchers (rss/filemanager) if there is no events.
 # notification level per watcher and default ?
 # colorize output?
 # sorting: by priority, by config?
 # make unified/merged actions column 
-
+  

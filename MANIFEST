@@ -27,10 +27,11 @@ share/assets/icons/notice.png
 share/assets/icons/notice_new.png
 share/assets/icons/open-link.png
 share/assets/icons/opening-link.png
+share/assets/icons/perl_watcher.png
 share/assets/icons/unknown.png
 share/assets/icons/unknown_new.png
 share/assets/icons/warn.png
 share/assets/icons/warn_new.png
 share/examples/Gtk2.conf.example
-t/000-compilation.t
+t/000-compile.t
 t/010-url-opener.t

@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.06';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_1';
 }
 
 use 5.12.0;
@@ -13,7 +13,7 @@ use App::PerlWatcher::Levels;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
 use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
-use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
+use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon_file/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
@@ -41,6 +41,18 @@ The timestamp last seen of user-visible watcher statuses.
 
 =cut
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
+
+=head1 SCREENSHOT
+
+=begin HTML
+
+<p>
+<img src="https://raw.github.com/basiliscos/images/master/PerlWatcher-0.16.png" alt="PerlWatcher GTK2 screenshot" title="PerlWatcher GTK2 screenshot" style="max-width:100%;">
+</p>
+
+=end HTML
+
+=cut
 
 =head1 CREDITS
 
@@ -148,6 +160,8 @@ sub _build_window {
              });
             0;
     });
+    my $icon_file = get_icon_file("assets/icons/perl_watcher.png");
+    $window->set_icon_from_file($icon_file);
 
     return $window;
 }

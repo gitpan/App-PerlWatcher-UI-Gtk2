@@ -1,11 +1,13 @@
 package App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf;
 {
-  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.06';
+  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.07_1';
 }
 
 use 5.12.0;
 use strict;
 use warnings;
+
+use Gtk2;
 
 use Glib::Object::Subclass
     Gtk2::CellRendererPixbuf::,

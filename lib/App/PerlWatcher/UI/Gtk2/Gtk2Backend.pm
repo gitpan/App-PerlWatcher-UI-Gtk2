@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Gtk2Backend;
 {
-  $App::PerlWatcher::UI::Gtk2::Gtk2Backend::VERSION = '0.06';
+  $App::PerlWatcher::UI::Gtk2::Gtk2Backend::VERSION = '0.07_1';
 }
 
 use 5.12.0;
