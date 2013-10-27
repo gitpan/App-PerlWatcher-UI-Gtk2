@@ -1,7 +1,8 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_1';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_2';
 }
+# ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
 use 5.12.0;
 use strict;
@@ -35,30 +36,10 @@ has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
 
-=attr last_seen
 
-The timestamp last seen of user-visible watcher statuses.
-
-=cut
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
 
-=head1 SCREENSHOT
 
-=begin HTML
-
-<p>
-<img src="https://raw.github.com/basiliscos/images/master/PerlWatcher-0.16.png" alt="PerlWatcher GTK2 screenshot" title="PerlWatcher GTK2 screenshot" style="max-width:100%;">
-</p>
-
-=end HTML
-
-=cut
-
-=head1 CREDITS
-
-Hanna Mineeva
-
-=cut
 
 sub _build_statuses_tree {
     my $self = shift;
@@ -282,3 +263,44 @@ sub _mark_as_read {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+App::PerlWatcher::UI::Gtk2::Application - Main application class for Gtk2 frontend for PerlWatcher
+
+=head1 VERSION
+
+version 0.07_2
+
+=head1 ATTRIBUTES
+
+=head2 last_seen
+
+The timestamp last seen of user-visible watcher statuses.
+
+=head1 SCREENSHOT
+
+=for HTML <p>
+<img src="https://raw.github.com/basiliscos/images/master/PerlWatcher-0.16.png" alt="PerlWatcher GTK2 screenshot" title="PerlWatcher GTK2 screenshot" style="max-width:100%;">
+</p>
+
+=head1 CREDITS
+
+Hanna Mineeva
+
+=head1 AUTHOR
+
+Ivan Baidakou <dmol@gmx.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Ivan Baidakou.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
