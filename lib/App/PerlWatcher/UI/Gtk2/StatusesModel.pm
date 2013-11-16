@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::StatusesModel;
 {
-  $App::PerlWatcher::UI::Gtk2::StatusesModel::VERSION = '0.07_2';
+  $App::PerlWatcher::UI::Gtk2::StatusesModel::VERSION = '0.08';
 }
 # ABSTRACT: Stores statuses in tree-like structure
 
@@ -134,7 +134,7 @@ App::PerlWatcher::UI::Gtk2::StatusesModel - Stores statuses in tree-like structu
 
 =head1 VERSION
 
-version 0.07_2
+version 0.08
 
 =head1 AUTHOR
 

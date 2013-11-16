@@ -32,4 +32,4 @@ requires:
   perl: 5.012
 resources:
   repository: https://github.com/basiliscos/perl-watcher-ui-gtk.git
-version: 0.07_2
+version: 0.08

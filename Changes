@@ -1,3 +1,7 @@
+0.08      2013-11-17 00:25:59 Europe/Minsk
+    Format timestamp event with 'y-m-d' format instead of 'h-M-s' when the last 
+    isn't available
+
 0.07_2    2013-10-27 18:41:42 Europe/Minsk
     Minimally document all modules: add abstract section
     Enabled pod_weaver
