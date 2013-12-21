@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Utils;
 {
-  $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.09';
 }
 # ABSTRACT: Helping functions for Gtk2 app
 
@@ -55,7 +55,7 @@ App::PerlWatcher::UI::Gtk2::Utils - Helping functions for Gtk2 app
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.09';
 }
 # ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
@@ -11,16 +11,20 @@ use warnings;
 use AnyEvent;
 use App::PerlWatcher::Engine;
 use App::PerlWatcher::Levels;
-use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
-use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
 use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon_file/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
+use Keybinder;
+use Memoize;
 use Moo;
 use POSIX qw(strftime);
 use Scalar::Util qw/weaken/;
+
+use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
+use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
+use aliased qw/Image::Base::Gtk2::Gdk::Pixbuf/;
 
 with qw/App::PerlWatcher::Frontend/;
 
@@ -33,6 +37,8 @@ has 'title'                 => ( is => 'lazy');
 has 'statuses_tree'         => ( is => 'lazy');
 has 'timers'                => ( is => 'rw', default => sub{ []; } );
 has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
+has 'max_level'             => ( is => 'rw', default => sub{ LEVEL_ANY; } );
+has 'max_level_new'         => ( is => 'rw', default => sub{ 0; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
 
@@ -122,25 +128,25 @@ sub _build_window {
     $window->set_skip_taskbar_hint($hide_from_taskbar);
     #$window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
-    $window->signal_connect('focus-out-event' => sub {
-            # focus out
-            my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
-                    my $has_tracked_widgets = @{ $self->focus_tracked_widgets };
-                    my $child_window_focus = 0;
-                    $child_window_focus &&= $_->considered_active
-                        for(@{ $self->focus_tracked_widgets });
-                    my $do_hide = ($has_tracked_widgets && $child_window_focus);
-                    #$do_hide = 0;
-                    ### $do_hide
-                    if($do_hide) {
-                        $window->hide;
-                        $self->timers([]); # kill all timers
-                        $self->last_seen(time);
-                    }
-                    undef $idle_w;
-             });
-            0;
-    });
+    # $window->signal_connect('focus-out-event' => sub {
+    #         # focus out
+    #         my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
+    #                 my $has_tracked_widgets = @{ $self->focus_tracked_widgets };
+    #                 my $child_window_focus = 0;
+    #                 $child_window_focus &&= $_->considered_active
+    #                     for(@{ $self->focus_tracked_widgets });
+    #                 my $do_hide = ($has_tracked_widgets && $child_window_focus);
+    #                 #$do_hide = 0;
+    #                 ### $do_hide
+    #                 if($do_hide) {
+    #                     $window->hide;
+    #                     $self->timers([]); # kill all timers
+    #                     $self->last_seen(time);
+    #                 }
+    #                 undef $idle_w;
+    #          });
+    #         0;
+    # });
     my $icon_file = get_icon_file("assets/icons/perl_watcher.png");
     $window->set_icon_from_file($icon_file);
 
@@ -153,10 +159,36 @@ sub BUILD {
 
     $self->_construct_gui;
 
-    $self->_set_label("just started", LEVEL_ANY, 0);
+    my $icon = get_level_icon(LEVEL_ANY, 0);
+    $self->icon_widget->set(pixbuf => $icon);
+
     $self->window->show_all
         unless($self->config->{hide_on_startup});
+
+    $self->_register_global_hotkeys;
     return $self;
+}
+
+sub _register_global_hotkeys {
+    my $self = shift;
+    my $shortcuts = $self->config->{global_shortcuts};
+    my $rise_key = $shortcuts->{rise};
+    bind_key($rise_key, sub { $self->_present; })
+        if($rise_key);
+}
+
+memoize('_get_polling_icon');
+sub _get_polling_icon {
+    my ($level, $unseen, $polling) = @_;
+    my $icon = get_level_icon($level, $unseen);
+    return $icon unless $polling;
+
+    my $copy = $icon->copy;
+    my ($w, $h) = ($copy->get_width, $copy->get_height);
+    my $image = Pixbuf->new(-pixbuf => $copy);
+    my ($x0, $y0, $x1, $y1) = ($h-5, $w-5, $h-2, $w-2);
+    $image->rectangle($x0, $y0, $x1, $y1, '#FF0000', 1);
+    return $image->get('-pixbuf');
 }
 
 sub update {
@@ -164,11 +196,18 @@ sub update {
     my $visible = $self->window->get('visible');
     $self->statuses_model->update($status, $visible, sub {
             my $path = shift;
-            $self->statuses_tree->expand_row($path, 1);
+            $self->statuses_tree->expand_row($path, 1)
+                if($status->watcher->memory->data->{expanded});
     });
     #$self->statuses_tree->expand_all;
     $self->_trigger_undertaker if ( $visible );
     $self->_update_summary;
+}
+
+sub poll {
+    my ( $self, $watcher ) = @_;
+    my $icon = _get_polling_icon($self->max_level, $self->max_level_new, 1);
+    $self->icon_widget->set(pixbuf => $icon);
 }
 
 sub show {
@@ -187,16 +226,24 @@ sub _update_summary {
     my $summary = $self->statuses_model->summary($summary_level);
     my $has_updated =  @{ $summary->{updated} };
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
+    my @polling = @{ $self->engine->polling_watchers };
     my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
     $tip = sprintf("%s (notificaiton level: %s)", $self->title,  $summary_level)
-        . ($tip ? "\n\n" . $tip : "");
-    $self->_set_label($tip, $summary->{max_level}, $has_updated);
+        . ($tip ? "\n\nUpdated:\n" . $tip : "");
+    if (@polling) {
+        $tip .= "\n\nPolling:";
+        $tip .= join("\n", map { $_->description } @polling);
+    }
+    $self->max_level_new($has_updated);
+    $self->max_level($summary->{max_level});
+    $self->icon_widget->set_tooltip_markup($tip);
+    $self->_update_tray_icon;
 }
 
-sub _set_label {
-    my ( $self, $tip, $level, $is_new ) = @_;
-    my $icon = get_level_icon($level, $is_new);
-    $self->icon_widget->set_tooltip_markup($tip);
+sub _update_tray_icon {
+    my ( $self ) = @_;
+    my $is_polling = @{ $self->engine->polling_watchers };
+    my $icon = _get_polling_icon($self->max_level, $self->max_level_new, $is_polling);
     $self->icon_widget->set(pixbuf => $icon);
 }
 
@@ -235,7 +282,8 @@ sub _present {
     my $window = $self->window;
     #if ( !$window->get('visible') ) {
         $window->hide_all;
-        $window->move( $x, $y );
+        $window->move($x, $y)
+            if(defined($x) && defined($y));
         $window->show_all;
         $window->present;
         $self->_trigger_undertaker;
@@ -274,7 +322,7 @@ App::PerlWatcher::UI::Gtk2::Application - Main application class for Gtk2 fronte
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 ATTRIBUTES
 

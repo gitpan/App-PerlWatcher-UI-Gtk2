@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Gtk2Backend;
 {
-  $App::PerlWatcher::UI::Gtk2::Gtk2Backend::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::Gtk2Backend::VERSION = '0.09';
 }
 # ABSTRACT: Backend class for Gtk2 loop
 
@@ -33,7 +33,7 @@ App::PerlWatcher::UI::Gtk2::Gtk2Backend - Backend class for Gtk2 loop
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

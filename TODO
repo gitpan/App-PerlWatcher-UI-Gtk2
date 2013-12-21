@@ -1,6 +1,5 @@
 CORE:
 # update status (tray icon) to notify changes, filtered by some level?
-# blicking dot whan any watcher is been polled
 # about information?
 
 BUILD/ECOSYSTEM:

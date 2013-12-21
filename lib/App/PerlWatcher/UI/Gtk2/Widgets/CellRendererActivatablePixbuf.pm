@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf;
 {
-  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.09';
 }
 # ABSTRACT: CellRenderer with triggers some action on clicking on some image in cell
 
@@ -45,7 +45,7 @@ App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf - CellRendere
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

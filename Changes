@@ -1,3 +1,10 @@
+0.09      2013-12-21 21:45:51 Europe/Minsk
+    Show information about updated and updating watchers in tooltip
+    Blick in system tray LED when any watcher is been updated
+    Store and take into account collapsed/expanded state
+    Use Keybinder to allow PerlWatcher-GTK to be popped up in
+        X-Windows via globally registerd hotkey
+
 0.08      2013-11-17 00:25:59 Europe/Minsk
     Format timestamp event with 'y-m-d' format instead of 'h-M-s' when the last 
     isn't available

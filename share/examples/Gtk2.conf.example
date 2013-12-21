@@ -15,4 +15,8 @@ use utf8;
     # reset.
     open_url_delay => 2,
 
+    global_shortcuts => {
+        rise => '<Ctrl><Alt>X',
+    },
+
 };

@@ -27,11 +27,13 @@ my %WriteMakefileArgs = (
   "NAME" => "App::PerlWatcher::UI::Gtk2",
   "PREREQ_PM" => {
     "AnyEvent" => "7.04",
-    "App::PerlWatcher::Engine" => "0.13",
+    "App::PerlWatcher::Engine" => "0.18",
     "Devel::Comments" => "v1.1.4",
     "File::ShareDir::ProjectDistDir" => "v0.4.4",
     "Gtk2" => "1.247",
     "Gtk2::TrayIcon" => "0.06",
+    "Image::Base::Gtk2::Gdk::Pixbuf" => 11,
+    "Keybinder" => "0.02",
     "List::MoreUtils" => "0.33",
     "Moo" => "1.003000",
     "Scalar::Util" => "1.25",
@@ -44,7 +46,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.08",
+  "VERSION" => "0.09",
   "test" => {
     "TESTS" => "t/*.t"
   }

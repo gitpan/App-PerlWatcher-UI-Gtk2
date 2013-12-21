@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::StatusesModel;
 {
-  $App::PerlWatcher::UI::Gtk2::StatusesModel::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::StatusesModel::VERSION = '0.09';
 }
 # ABSTRACT: Stores statuses in tree-like structure
 
@@ -27,7 +27,7 @@ sub new {
     $self -> {_engine  } = $app->engine;
     $self -> {_shelf   } = $app->engine->shelf;
     bless $self, $class;
-    
+
     for my $watcher (@{ $app->engine->watchers }) {
         my $iter = $self->append(undef);
         my $status = Status->new(
@@ -37,11 +37,11 @@ sub new {
         );
         $self -> {_watchers}{ $watcher } = {
             status   =>  $status,
-            iterator => $iter, 
+            iterator => $iter,
         };
-        $self -> _update_status( $iter, $status); 
+        $self -> _update_status( $iter, $status);
     }
-          
+
     return $self;
 }
 
@@ -63,10 +63,10 @@ sub shelf {
 
 sub stash_outdated {
     my ($self, $time) = @_;
-    my @outdated = 
-        grep { $_->timestamp <= $time } 
-        map { $_->{status} } 
-        values %{ $self -> {_watchers} }; 
+    my @outdated =
+        grep { $_->timestamp <= $time }
+        map { $_->{status} }
+        values %{ $self -> {_watchers} };
     for( @outdated ) {
         if ( $self->{_shelf}->stash_status($_) ) {
             my $iter = $self -> {_watchers}{ $_->watcher }{iterator};
@@ -84,12 +84,12 @@ sub summary {
         updated   => [],
     };
     my @statuses =
-        map { $_->{status} } 
+        map { $_->{status} }
         values %{ $self -> {_watchers} };
     for ( @statuses ) {
         $result->{max_level} = $_->level
             if ( $result->{max_level} < $_->level );
-        push @{ $result->{updated} }, $_  
+        push @{ $result->{updated} }, $_
             if $self->{_shelf}->status_changed($_)
                 && $_->level >= $minimal_level;
     }
@@ -110,10 +110,10 @@ sub _update_event_items {
         while ($child) {
             my $next = $self -> iter_next($child);
             $self -> remove($child);
-            $child = $next; 
+            $child = $next;
         };
     }
-    
+
     # add new children
     my $items = $status->items ? $status->items->() : [];
     for my $i (@$items) {
@@ -134,7 +134,7 @@ App::PerlWatcher::UI::Gtk2::StatusesModel - Stores statuses in tree-like structu
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 
